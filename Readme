@@ -1,0 +1,134 @@
+Overview
+
+This project presents the TCAD design and transient analysis of a 1T DRAM cell implemented using a double-gate MOSFET, simulated in Silvaco ATLAS. The memory operation relies on charge storage in the floating body region, eliminating the need for an explicit capacitor and enabling high-density memory architectures.
+
+The work focuses on Write–Hold–Read (WHR) dynamics, with particular emphasis on retention behavior during hold states, which is the defining characteristic of DRAM operation.
+
+Key Concepts
+
+Floating-body charge storage in a double-gate MOSFET
+
+Capacitor-less (1T) DRAM architecture
+
+Transient TCAD simulation of memory states
+
+Non-local band-to-band tunneling and impact ionization for charge generation
+
+Retention analysis under HOLD-1 and HOLD-0 conditions
+
+Device Structure
+
+Double-gate MOSFET geometry
+
+Silicon body with heavily doped source/drain regions
+
+SiO₂ gate dielectrics on top and bottom
+
+Quantum tunneling regions defined near source and drain
+
+Floating body region enabling charge retention
+
+The structure is discretized using a non-uniform mesh optimized near tunneling and junction regions to ensure numerical accuracy.
+
+Simulation Flow
+
+The memory operation is modeled using a sequence of transient simulations:
+
+Initialization
+
+Device brought to equilibrium
+
+Write-1
+
+Bias conditions induce charge storage in the floating body
+
+Hold-1
+
+All body contacts removed; stored charge retention is observed
+
+Read-1
+
+Small sensing bias applied to detect stored state
+
+Write-0
+
+Stored charge is removed
+
+Hold-0
+
+Leakage-dominated state verification
+
+Read-0
+
+Confirmation of low-current state
+
+Each operation is simulated using time-domain analysis to capture dynamic charge behavior.
+
+Physical Models
+
+The following models are employed (enabled selectively depending on simulation phase):
+
+SRH recombination
+
+Bandgap narrowing
+
+Concentration-dependent mobility
+
+Non-local band-to-band tunneling
+
+Impact ionization (Selberherr model)
+
+Fermi–Dirac statistics
+
+Model complexity is reduced during debugging of retention behavior and progressively re-enabled for realism.
+
+Key Results
+
+Clear distinction between Write-1 and Write-0 states
+
+Demonstration of charge retention during HOLD-1
+
+Stable low-leakage HOLD-0 behavior
+
+Transient drain current signatures validating DRAM operation
+
+Identification of critical design constraints such as:
+
+Floating body requirement
+
+Drain bias limits during hold
+
+Retention dependence on recombination mechanisms
+
+Tools Used
+
+Silvaco ATLAS – Device simulation
+
+TonyPlot – Visualization and transient analysis
+
+Motivation
+
+Capacitor-less DRAM using MOSFET-based charge storage offers a promising path toward:
+
+Higher memory density
+
+Reduced process complexity
+
+Compatibility with scaled CMOS technologies
+
+This project aims to provide a clear, physics-backed TCAD reference for understanding and designing such memory cells.
+
+Repository Contents
+
+ATLAS input decks for device definition and transient simulations
+
+Log files capturing write/hold/read currents
+
+Structure files for post-processing and visualization
+
+Documentation explaining bias schemes and physical behavior
+
+Disclaimer
+
+This project is intended for academic and research purposes.
+Simulation parameters are chosen to highlight physical mechanisms rather than represent a specific commercial technology node.
