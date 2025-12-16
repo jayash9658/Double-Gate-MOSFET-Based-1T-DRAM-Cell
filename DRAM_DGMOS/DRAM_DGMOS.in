@@ -1,0 +1,118 @@
+go atlas
+mesh space.mult=1.0
+
+# X-direction mesh
+x.mesh loc=-0.02 spac=0.01
+x.mesh loc=0.0 spac=0.01
+x.mesh loc=0.01 spac=0.008
+x.mesh loc=0.04 spac=0.004
+x.mesh loc=0.045 spac=0.001
+x.mesh loc=0.05 spac=0.001
+x.mesh loc=0.055 spac=0.001
+x.mesh loc=0.06 spac=0.004
+x.mesh loc=0.14 spac=0.004
+x.mesh loc=0.145 spac=0.001
+x.mesh loc=0.15 spac=0.001
+x.mesh loc=0.155 spac=0.001
+x.mesh loc=0.16 spac=0.004
+x.mesh loc=0.19 spac=0.008
+x.mesh loc=0.2 spac=0.01
+x.mesh loc=0.21 spac=0.01
+x.mesh loc=0.22 spac=0.01
+
+# Y-direction mesh
+y.mesh loc=-0.02 spac=0.002
+y.mesh loc=-0.01 spac=0.002
+y.mesh loc=-0.006 spac=0.002
+y.mesh loc=-0.003 spac=0.002
+y.mesh loc=0.0 spac=0.002
+y.mesh loc=0.005 spac=0.002
+y.mesh loc=0.05 spac=0.002
+y.mesh loc=0.09 spac=0.008
+y.mesh loc=0.1 spac=0.01
+y.mesh loc=0.105 spac=0.002
+y.mesh loc=0.11 spac=0.002
+y.mesh loc=0.12 spac=0.002
+
+# Region definition
+region num=1 material=Vacuum
+region num=2 material=Si x.min=0.0 x.max=0.2 y.min=0.0 y.max=0.1
+region num=3 material=Si x.min=0.0 x.max=0.05 y.min=0.0 y.max=0.1
+region num=4 material=Si x.min=0.15 x.max=0.2 y.min=0.0 y.max=0.1
+region num=5 material=SiO2 x.min=0.05 x.max=0.15 y.min=-0.01 y.max=0.0
+region num=6 material=SiO2 x.min=0.05 x.max=0.15 y.min=0.1 y.max=0.11
+
+qtregion number=1 pts.normal=10 pts.tunnel=131 x1=0.145 y1=0.0 x2=0.145 y2=0.1 x3=0.155 y3=0.1 x4=0.155 y4=0.0
+qtregion number=2 pts.normal=10 pts.tunnel=131 x1=0.045 y1=0.0 x2=0.045 y2=0.1 x3=0.055 y3=0.1 x4=0.055 y4=0.0
+
+# Electrode definition
+electrode name=gate x.min=0.05 x.max=0.15 y.min=-0.02 y.max=-0.01
+electrode name=source x.min=-0.02 x.max=0.0 y.min=0.0 y.max=0.1
+electrode name=drain x.min=0.2 x.max=0.22 y.min=0.0 y.max=0.1
+electrode name=base x.min=0.05 x.max=0.15 y.min=0.11 y.max=0.12
+
+# Doping profile
+doping uniform conc=1e17 p.type reg=2
+doping uniform conc=1e20 n.type reg=3
+doping uniform conc=1e20 n.type reg=4
+
+# Interface charges at Si/SiO2 interface
+interf qf=3e10 
+
+# Contact definitions
+contact name=gate workfunction=4.6
+contact name=source 
+contact name=drain
+contact name=base workfunction=4.6
+
+#output
+output band.temp band.param traps u.srh qfp e.field j.electron j.hole j.conduc j.total ex.field ey.field flowlines e.mobility h.mobility e.temp h.temp val.band con.band qfn j.disp photogen impact
+
+# Physical models
+models consrh bbt.nonlocal bbt.forward ni.fermi mass.tunnel=40 cvt bgn auger bipolar conmob temp=300
+impact selb
+
+# Numerical method
+#method newton trap
+#method newton gummel
+method newton climit=1e-4 maxtrap=8
+#Loop steps = 1000
+
+# Initial solution
+solve init
+save outf=mos.str
+#quit
+#initial
+
+log outf=dgmos_init.log
+SOLVE Vdrain=0 Vgate=0 vbase=0 vsource=0 RAMPTIME=0.001E-6 TSTOP=10e-9 DT=1e-11
+save outf=dgmos_init.str
+#quit
+#write1
+
+log outf=dgmos.w1.log
+SOLVE Vdrain=2 Vgate=-1 vbase=-1 vsource=-1 RAMPTIME=0.001E-6 TSTOP=20e-9 DT=1e-11
+save outf=dgmos.w1.str
+
+log outf=dgmos.h1.log
+SOLVE Vdrain=1 Vgate=-2 vbase=-2 vsource=1 RAMPTIME=0.001E-6 TSTOP=30e-9 DT=1e-11
+save outf=dgmos.h1.str
+
+log outf=dgmos.r1.log
+SOLVE Vdrain=2 Vgate=1.5 vbase=-2 vsource=1.5 RAMPTIME=0.001E-6 TSTOP=40e-9 DT=1e-11
+save outf=dgmos.r1.str
+
+log outf=dgmos.w0.log
+SOLVE Vdrain=-0.5 Vgate=0 vbase=0 vsource=-0.5 RAMPTIME=0.001E-6 TSTOP=50e-9 DT=1e-11
+save outf=dgmos.w0.str
+
+log outf=dgmos.h0.log
+SOLVE Vdrain=1 Vgate=-2 vbase=-2 vsource=1 RAMPTIME=0.001E-6 TSTOP=60e-9 DT=1e-11
+save outf=dgmos.h0.str
+
+log outf=dgmos.r0.log
+SOLVE Vdrain=2 Vgate=1.5 vbase=-2 vsource=1.5 RAMPTIME=0.001E-6 TSTOP=70e-9 DT=1e-11
+save outf=dgmos.r0.str
+
+tonyplot dgmos_init.str dgmos.w1.log dgmos.h1.log dgmos.r1.log dgmos.w0.log dgmos.h0.log dgmos.r0.log
+quit
