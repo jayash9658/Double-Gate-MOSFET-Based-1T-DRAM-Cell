@@ -1,4 +1,4 @@
-Overview
+#Double Gate MOSFET Based 1T DRAM Cell
 
 This project presents the TCAD design and transient analysis of a 1T DRAM cell implemented using a double-gate MOSFET, simulated in Silvaco ATLAS. The memory operation relies on charge storage in the floating body region, eliminating the need for an explicit capacitor and enabling high-density memory architectures.
 
